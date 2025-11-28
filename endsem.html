@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reusable UI Components Demo (Plain JS)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .app {
+      width: 500px;
+      margin: 20px auto;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      margin-right: 6px;
+      cursor: pointer;
+    }
+
+    .btn-gray {
+      background-color: gray;
+    }
+
+    .card {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background-color: #ffffff;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 10px;
+    }
+
+    .input-group label {
+      display: block;
+    }
+
+    .input-group input {
+      padding: 7px;
+      width: 100%;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app"></div>
+
+  <script>
+    /* ---------- Reusable Component Creators (Plain JS) ---------- */
+
+    function createButton(text, color, onClick) {
+      const btn = document.createElement("button");
+      btn.textContent = text;
+      btn.style.backgroundColor = color;
+      if (onClick) {
+        btn.addEventListener("click", onClick);
+      }
+      return btn;
+    }
+
+    function createInput(labelText, placeholder) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "input-group";
+
+      const label = document.createElement("label");
+      label.textContent = labelText;
+
+      const input = document.createElement("input");
+      input.placeholder = placeholder;
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(input);
+
+      return wrapper;
+    }
+
+    function createCard(title, bgColor) {
+      const card = document.createElement("div");
+      card.className = "card";
+      if (bgColor) {
+        card.style.backgroundColor = bgColor;
+      }
+
+      const h3 = document.createElement("h3");
+      h3.textContent = title;
+
+      card.appendChild(h3);
+
+      return card;
+    }
+
+    /* ---------- Pages ---------- */
+
+    function renderHomePage(container) {
+      const page = document.createElement("div");
+
+      const title = document.createElement("h2");
+      title.textContent = "Home Page";
+      page.appendChild(title);
+
+      // Card: Welcome
+      const welcomeCard = createCard("Welcome", "#e6f0ff");
+      const p1 = document.createElement("p");
+      p1.textContent = "This card has a blue background.";
+      welcomeCard.appendChild(p1);
+
+      welcomeCard.appendChild(createButton("Start", "blue"));
+      welcomeCard.appendChild(createButton("More Info", "green"));
+      page.appendChild(welcomeCard);
+
+      // Card: Subscribe
+      const subscribeCard = createCard("Subscribe");
+      subscribeCard.appendChild(createInput("Email", "Enter your email"));
+      subscribeCard.appendChild(createButton("Subscribe", "purple"));
+      page.appendChild(subscribeCard);
+
+      container.appendChild(page);
+    }
+
+    function renderProfilePage(container) {
+      const page = document.createElement("div");
+
+      const title = document.createElement("h2");
+      title.textContent = "Profile Page";
+      page.appendChild(title);
+
+      const userCard = createCard("User Details", "#f2f2f2");
+      userCard.appendChild(createInput("Name", "Enter your name"));
+      userCard.appendChild(createInput("Phone", "Enter phone number"));
+
+      userCard.appendChild(createButton("Save", "teal"));
+      userCard.appendChild(createButton("Cancel", "red"));
+
+      page.appendChild(userCard);
+      container.appendChild(page);
+    }
+
+    /* ---------- Main App (Plain JS Version of React App) ---------- */
+
+    (function main() {
+      const app = document.getElementById("app");
+      let currentPage = "home";
+
+      function render() {
+        app.innerHTML = "";
+
+        const heading = document.createElement("h1");
+        heading.textContent = "Reusable UI Components Demo";
+        app.appendChild(heading);
+
+        // Navigation buttons
+        const homeBtn = createButton("Home", "gray", function () {
+          currentPage = "home";
+          render();
+        });
+        const profileBtn = createButton("Profile", "gray", function () {
+          currentPage = "profile";
+          render();
+        });
+
+        app.appendChild(homeBtn);
+        app.appendChild(profileBtn);
+
+        app.appendChild(document.createElement("hr"));
+
+        // Load pages
+        if (currentPage === "home") {
+          renderHomePage(app);
+        } else {
+          renderProfilePage(app);
+        }
+      }
+
+      render();
+    })();
+  </script>
+</body>
+</html>
